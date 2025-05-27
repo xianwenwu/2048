@@ -30,7 +30,8 @@
 ## 🛠️ 使用技術
 
 ## 🛠️ 程式執行畫面
-![image](https://github.com/user-attachments/assets/509c831a-2a62-4148-8c89-e04434015a30)
+![image](https://github.com/user-attachments/assets/d050018d-c535-4317-b79b-52f55b788578)
+
 
 ## 📦 安裝與執行
 
