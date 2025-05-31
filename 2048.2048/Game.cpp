@@ -9,11 +9,11 @@ void Game::play() {
 		cout << "-----------------------------\n";
 		for (int i = 0; i < 7; i++) {
 			if (i == 2)
-				cout << "|         2048 ¹CÀ¸         |\n";
+				cout << "|         game start         |\n";
 			else if (i == 3)
-				cout << "|       ¡]ªÅ®æ¶}©l¡^        |\n";
+				cout << "|       ï¼ˆspace startï¼‰        |\n";
 			else if (i == 4)
-				cout << "|    q¡GÂ÷¶}    r¡G­«¶}     |\n";
+				cout << "|    qï¼šquit    rï¼šReset Game     |\n";
 			else
 				cout << "|                           |\n";
 		}
@@ -23,38 +23,38 @@ void Game::play() {
 		if (ch == ' ')
 			break;
 		else if (ch == 'q') {
-			exit(0);  // µ²§ôµ{¦¡
+			exit(0);  
 		}
 	}
 
 	while (true) {
-		A.print_board();  // Åã¥Ü½L­±
-		cout << "¾Þ§@¡G¤è¦VÁä²¾°Ê¡Ar = ­«¨Ó¡Aq = Â÷¶}\n";
+		A.print_board();  
+		cout << "æ“ä½œï¼šæ–¹å‘éµç§»å‹•ï¼Œr = é‡ä¾†ï¼Œq = é›¢é–‹\n";
 
 		int key = _getch();
 		if (key == 'q') {
-			cout << "§A¤wÂ÷¶}¹CÀ¸¡C\n";
+			cout << "ä½ å·²é›¢é–‹éŠæˆ²ã€‚\n";
 			break;
 		}
 		else if (key == 'r') {
-			cout << "­«·s¶}©l¹CÀ¸...\n";
-			A = Produce();  // «Ø¥ß·sªº½L­±
+			cout << "é‡æ–°é–‹å§‹éŠæˆ²...\n";
+			A = Produce();  
 			continue;
 		}
-		else if (key == 224 || key == -32) { // ¤è¦VÁä
+		else if (key == 224 || key == -32) {
 			key = _getch();
 			switch (key) {
-			case 72: moveUp(); break;     // ¡ô
-			case 80: moveDown(); break;   // ¡õ
-			case 75: moveLeft(); break;   // ¡ö
-			case 77: moveRight(); break;  // ¡÷
+			case 72: moveUp(); break;    
+			case 80: moveDown(); break;   
+			case 75: moveLeft(); break;  
+			case 77: moveRight(); break; 
 			}
-			A.generate_random_tile();  // ¨C¦¸²¾°Ê«á·s¼W·s¤è¶ô
+			A.generate_random_tile();  
 		}
 
 		if (isGameOver()) {
 			A.print_board();
-			cout << "¹CÀ¸µ²§ô¡I«ö r ­«·s¶}©l©Î q Â÷¶}¡C\n";
+			cout << "éŠæˆ²çµæŸï¼æŒ‰ r é‡æ–°é–‹å§‹æˆ– q é›¢é–‹ã€‚\n";
 			while (true) {
 				int endKey = _getch();
 				if (endKey == 'r') {
@@ -75,11 +75,11 @@ void Game::shiftLeft() {
 		int k = 0;
 		for (int j = 0; j < 4; j++) {
 			if (A.board[i][j] != 0) {
-				A.board[i][k++] = A.board[i][j]; //«D0¤è¶ô¦V¥ª²¾
+				A.board[i][k++] = A.board[i][j]; 
 			}
 		}
 		while (k < 4) {
-			A.board[i][k++] = 0;//³Ñ¾l¤è¶ô¸É0
+			A.board[i][k++] = 0;
 		}
 	}
 }
@@ -87,7 +87,7 @@ void Game::mergeLeft() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (A.board[i][j] != 0 && A.board[i][j] == A.board[i][j + 1]) {
-				A.board[i][j] *= 2;//¤è¶ô¦X¨Ö
+				A.board[i][j] *= 2;
 				A.board[i][j + 1] = 0;
 			}
 		}
@@ -103,11 +103,11 @@ void Game::shiftRight() {
 		int k = 3;
 		for (int j = 3; j >= 0; j--) {
 			if (A.board[i][j] != 0) {
-				A.board[i][k--] = A.board[i][j]; //«D0¤è¶ô¦V¥k²¾
+				A.board[i][k--] = A.board[i][j]; 
 			}
 		}
 		while (k >= 0) {
-			A.board[i][k--] = 0;//³Ñ¾l¤è¶ô¸É0
+			A.board[i][k--] = 0;
 		}
 	}
 }
@@ -115,7 +115,7 @@ void Game::mergeRight() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 3; j > 0; j--) {
 			if (A.board[i][j] != 0 && A.board[i][j] == A.board[i][j - 1]) {
-				A.board[i][j] *= 2;//¤è¶ô¦X¨Ö
+				A.board[i][j] *= 2;
 				A.board[i][j - 1] = 0;
 			}
 		}
@@ -131,11 +131,11 @@ void Game::shiftUp() {
 		int k = 0;
 		for (int i = 0; i < 4; i++) {
 			if (A.board[i][j] != 0) {
-				A.board[k++][j] = A.board[i][j]; //«D0¤è¶ô¦V¤W²¾
+				A.board[k++][j] = A.board[i][j]; 
 			}
 		}
 		while (k < 4) {
-			A.board[k++][j] = 0;//³Ñ¾l¤è¶ô¸É0
+			A.board[k++][j] = 0;
 		}
 	}
 }
@@ -143,7 +143,7 @@ void Game::mergeUp() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (A.board[i][j] != 0 && A.board[i][j] == A.board[i + 1][j]) {
-				A.board[i][j] *= 2;//¤è¶ô¦X¨Ö
+				A.board[i][j] *= 2;
 				A.board[i + 1][j] = 0;
 			}
 		}
@@ -159,11 +159,11 @@ void Game::shiftDown() {
 		int k = 3;
 		for (int i = 3; i >= 0; i--) {
 			if (A.board[i][j] != 0) {
-				A.board[k--][j] = A.board[i][j]; //«D0¤è¶ô¦V¤U²¾
+				A.board[k--][j] = A.board[i][j]; 
 			}
 		}
 		while (k >= 0) {
-			A.board[k--][j] = 0;//³Ñ¾l¤è¶ô¸É0
+			A.board[k--][j] = 0;
 		}
 	}
 }
@@ -171,7 +171,7 @@ void Game::mergeDown() {
 	for (int j = 0; j < 4; j++) {
 		for (int i = 3; i > 0; i--) {
 			if (A.board[i][j] != 0 && A.board[i][j] == A.board[i - 1][j]) {
-				A.board[i][j] *= 2; // ¬Û¦P¤è¶ô¦X¨Ö
+				A.board[i][j] *= 2; 
 				A.board[i - 1][j] = 0;
 			}
 		}
@@ -186,16 +186,15 @@ bool Game::isGameOver() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (A.board[i][j] == 0) {
-				return false; // ÁÙ¦³ªÅ®æ¤l¡A¹CÀ¸¥¼µ²§ô
+				return false; 
 			}
 			if (i > 0 && A.board[i][j] == A.board[i - 1][j]) {
-				return false; // ÁÙ¦³¬Û¾F¥B¬Û¦Pªº¤è¶ô¡A¹CÀ¸¥¼µ²§ô(««ª½)
+				return false; 
 			}
 			if (j > 0 && A.board[i][j] == A.board[i][j - 1]) {
-				return false; // ÁÙ¦³¬Û¾F¥B¬Û¦Pªº¤è¶ô¡A¹CÀ¸¥¼µ²§ô(¤ô¥­)
+				return false; 
 			}
 		}
 	}
 	A.print_board();
-	return true; // ¨S¦³ªÅ®æ¤l¥B¨S¦³¬Û¾F¥B¬Û¦Pªº¤è¶ô¡A¹CÀ¸µ²§ô
-}
+	return true; 
