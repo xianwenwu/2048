@@ -1,58 +1,66 @@
 #include "Produce.h"
 
-Produce::Produce() {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            board[i][j] = 0;
-        }
-    }
-    // 初始生成兩個方塊
-    generate_random_tile(2);
+Produce::Produce(){
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			board[i][j] = 0;
+		}
+	}
+
+	int place1 = (rand() % 16);
+	int place2 = place1;
+	while (place1 == place2) place2 = (rand() % 16);
+
+	int count = 0;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (count == place1 || count == place2) {
+				board[i][j] = 2;
+			}
+			count++;
+		}
+	}
 }
 
-void Produce::generate_random_tile_one_or_two() {
-    int amount = (rand() % 2 + 1); // 這次要產生幾個 tile（1 或 2）
-    generate_random_tile(amount);
+void Produce::generate_random_tile(){
+	vector<pair<int, int>> emptyCells;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (board[i][j] == 0) {
+				emptyCells.push_back({i, j});
+			}
+		}
+	}
+
+	if (emptyCells.empty()) {
+		return;
+	}
+
+	int amount = (rand() % 2 + 1);
+	if (emptyCells.size() == 1) {
+		amount = 1;
+	}
+
+	for (int k = 0; k < amount; ++k) {
+		if (emptyCells.empty()) {
+			break;
+		}
+		int randomIndex = rand() % emptyCells.size();
+		pair<int, int> cell = emptyCells[randomIndex];
+		board[cell.first][cell.second] = ((rand() % 2 + 1)) * 2;
+		emptyCells.erase(emptyCells.begin() + randomIndex);
+	}
 }
 
-void Produce::generate_random_tile(int count_to_generate) {
-    std::vector<std::pair<int, int>> empty_cells;
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            if (board[i][j] == 0) {
-                empty_cells.push_back({i, j});
-            }
-        }
-    }
+void Produce::print_board(){
 
-    if (empty_cells.empty()) {
-        return; // 沒有空位了
-    }
-
-    // 使用 C++11 亂數引擎
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(empty_cells.begin(), empty_cells.end(), g);
-
-    int actual_generated_count = 0;
-    for (const auto& cell : empty_cells) {
-        if (actual_generated_count >= count_to_generate) {
-            break;
-        }
-        int val = (rand() % 2 + 1) * 2; // 50% 機率 2，50% 機率 4
-        board[cell.first][cell.second] = val;
-        actual_generated_count++;
-    }
-}
-
-void Produce::print_board() {
-    std::cout << "\n2048\n";
-    std::cout << "-----------------------------\n";
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            std::cout << "| " << std::setw(4) << board[i][j] << " ";
-        }
-        std::cout << "|\n";
-        std::cout << "-----------------------------\n";
-    }
+	cout << "\n2048\n";
+	cout << "-----------------------------\n";
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			cout << "| " << setw(4) << board[i][j] << " ";
+		}
+		cout << "|\n";
+		cout << "-----------------------------\n";
+	}
 }
