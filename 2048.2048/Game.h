@@ -1,12 +1,40 @@
 #ifndef GAME_H
 #define GAME_H
 #include<iostream>
-#include <conio.h>
 #include"Produce.h"
+
+#ifdef _WIN32
+#include <conio.h>
+#else
+#include <termios.h>
+#include <unistd.h>
+#include <cstdio>
+#endif
+
 using namespace std;
+
+#ifndef _WIN32
+int getch_linux() {
+    struct termios oldt, newt;
+    int ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+}
+#define GETCH getch_linux
+#define CLRSCR system("clear")
+#else
+#define GETCH _getch
+#define CLRSCR system("cls")
+#endif
 
 class Game{
 private:
+	Produce A;
 	void shiftLeft();
 	void mergeLeft();
 	void moveLeft();
@@ -20,9 +48,8 @@ private:
 	void mergeDown();
 	void moveDown();
 public:
-	Produce A;
-	Game(Produce);
-	void play();
+	Game();
+	void run();
 	bool isGameOver();
 };
 #endif
