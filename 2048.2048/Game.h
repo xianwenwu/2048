@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 #include<iostream>
-#include <conio.h>// 提供_getch()，偵測鍵盤輸入
+#include <conio.h>
 #include"Produce.h"
 using namespace std;
 
@@ -22,7 +22,7 @@ private:
 public:
 	Produce A;
 	Game(Produce);
-	void play();// 開始進行遊戲主迴圈
-	bool isGameOver();// 檢查遊戲是否結束（無可移動與合併的方塊）
+	void play();
+	bool isGameOver();
 };
 #endif
