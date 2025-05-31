@@ -1,21 +1,22 @@
 #include "Produce.h"
 
-Produce::Produce(){
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			board[i][j] = 0;
-		}
-	}
-
-	generate_random_tile(2);
+Produce::Produce() {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            board[i][j] = 0;
+        }
+    }
+    // 初始生成兩個方塊
+    generate_random_tile(2);
 }
 
-void Produce::generate_random_tile(){
-	generate_random_tile(1);
+void Produce::generate_random_tile_one_or_two() {
+    int amount = (rand() % 2 + 1); // 這次要產生幾個 tile（1 或 2）
+    generate_random_tile(amount);
 }
 
-void Produce::generate_random_tile(int num_to_generate){
-    vector<pair<int, int>> empty_cells;
+void Produce::generate_random_tile(int count_to_generate) {
+    std::vector<std::pair<int, int>> empty_cells;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             if (board[i][j] == 0) {
@@ -25,33 +26,33 @@ void Produce::generate_random_tile(int num_to_generate){
     }
 
     if (empty_cells.empty()) {
-        return;
+        return; // 沒有空位了
     }
 
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(empty_cells.begin(), empty_cells.end(), g);
+    // 使用 C++11 亂數引擎
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(empty_cells.begin(), empty_cells.end(), g);
 
-    int count = 0;
+    int actual_generated_count = 0;
     for (const auto& cell : empty_cells) {
-        if (count >= num_to_generate) {
+        if (actual_generated_count >= count_to_generate) {
             break;
         }
-        int val = (rand() % 2 + 1) * 2; // 2 or 4
+        int val = (rand() % 2 + 1) * 2; // 50% 機率 2，50% 機率 4
         board[cell.first][cell.second] = val;
-        count++;
+        actual_generated_count++;
     }
 }
 
-
-void Produce::print_board(){
-	cout << "\n2048\n";
-	cout << "-----------------------------\n";
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			cout << "| " << setw(4) << board[i][j] << " ";
-		}
-		cout << "|\n";
-		cout << "-----------------------------\n";
-	}
-}00
+void Produce::print_board() {
+    std::cout << "\n2048\n";
+    std::cout << "-----------------------------\n";
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            std::cout << "| " << std::setw(4) << board[i][j] << " ";
+        }
+        std::cout << "|\n";
+        std::cout << "-----------------------------\n";
+    }
+}
