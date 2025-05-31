@@ -1,9 +1,11 @@
 #include "Game.h"
+#include <cstdlib>
 
-Game::Game(Produce A) {
-	this->A = A;
+Game::Game() : A() {
+
 }
-void Game::play() {
+
+void Game::run() {
 	char ch;
 	for (;;) {
 		cout << "-----------------------------\n";
@@ -19,44 +21,46 @@ void Game::play() {
 		}
 		cout << "-----------------------------\n";
 
-		ch = getchar();
+		ch = GETCH();
 		if (ch == ' ')
 			break;
 		else if (ch == 'q') {
-			exit(0);  
+			exit(0);
 		}
 	}
 
 	while (true) {
-		A.print_board();  
+		CLRSCR;
+		A.print_board();
 		cout << "操作：方向鍵移動，r = 重來，q = 離開\n";
 
-		int key = _getch();
+		int key = GETCH();
 		if (key == 'q') {
 			cout << "你已離開遊戲。\n";
 			break;
 		}
 		else if (key == 'r') {
 			cout << "重新開始遊戲...\n";
-			A = Produce();  
+			A = Produce();
 			continue;
 		}
 		else if (key == 224 || key == -32) {
-			key = _getch();
+			key = GETCH();
 			switch (key) {
-			case 72: moveUp(); break;    
-			case 80: moveDown(); break;   
-			case 75: moveLeft(); break;  
-			case 77: moveRight(); break; 
+			case 72: moveUp(); break;
+			case 80: moveDown(); break;
+			case 75: moveLeft(); break;
+			case 77: moveRight(); break;
 			}
-			A.generate_random_tile();  
+			A.generate_random_tile();
 		}
 
 		if (isGameOver()) {
+			CLRSCR;
 			A.print_board();
 			cout << "遊戲結束！按 r 重新開始或 q 離開。\n";
 			while (true) {
-				int endKey = _getch();
+				int endKey = GETCH();
 				if (endKey == 'r') {
 					A = Produce();
 					break;
@@ -75,7 +79,7 @@ void Game::shiftLeft() {
 		int k = 0;
 		for (int j = 0; j < 4; j++) {
 			if (A.board[i][j] != 0) {
-				A.board[i][k++] = A.board[i][j]; 
+				A.board[i][k++] = A.board[i][j];
 			}
 		}
 		while (k < 4) {
@@ -85,7 +89,7 @@ void Game::shiftLeft() {
 }
 void Game::mergeLeft() {
 	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+		for (int j = 0; j < 3; j++) {
 			if (A.board[i][j] != 0 && A.board[i][j] == A.board[i][j + 1]) {
 				A.board[i][j] *= 2;
 				A.board[i][j + 1] = 0;
@@ -103,7 +107,7 @@ void Game::shiftRight() {
 		int k = 3;
 		for (int j = 3; j >= 0; j--) {
 			if (A.board[i][j] != 0) {
-				A.board[i][k--] = A.board[i][j]; 
+				A.board[i][k--] = A.board[i][j];
 			}
 		}
 		while (k >= 0) {
@@ -131,7 +135,7 @@ void Game::shiftUp() {
 		int k = 0;
 		for (int i = 0; i < 4; i++) {
 			if (A.board[i][j] != 0) {
-				A.board[k++][j] = A.board[i][j]; 
+				A.board[k++][j] = A.board[i][j];
 			}
 		}
 		while (k < 4) {
@@ -140,7 +144,7 @@ void Game::shiftUp() {
 	}
 }
 void Game::mergeUp() {
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (A.board[i][j] != 0 && A.board[i][j] == A.board[i + 1][j]) {
 				A.board[i][j] *= 2;
@@ -159,7 +163,7 @@ void Game::shiftDown() {
 		int k = 3;
 		for (int i = 3; i >= 0; i--) {
 			if (A.board[i][j] != 0) {
-				A.board[k--][j] = A.board[i][j]; 
+				A.board[k--][j] = A.board[i][j];
 			}
 		}
 		while (k >= 0) {
@@ -171,7 +175,7 @@ void Game::mergeDown() {
 	for (int j = 0; j < 4; j++) {
 		for (int i = 3; i > 0; i--) {
 			if (A.board[i][j] != 0 && A.board[i][j] == A.board[i - 1][j]) {
-				A.board[i][j] *= 2; 
+				A.board[i][j] *= 2;
 				A.board[i - 1][j] = 0;
 			}
 		}
@@ -186,15 +190,15 @@ bool Game::isGameOver() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (A.board[i][j] == 0) {
-				return false; 
+				return false;
 			}
 			if (i > 0 && A.board[i][j] == A.board[i - 1][j]) {
-				return false; 
+				return false;
 			}
 			if (j > 0 && A.board[i][j] == A.board[i][j - 1]) {
-				return false; 
+				return false;
 			}
 		}
 	}
-	A.print_board();
-	return true; 
+	return true;
+}
