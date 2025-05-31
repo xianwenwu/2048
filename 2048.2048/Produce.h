@@ -4,14 +4,18 @@
 #include<iomanip>
 #include<cstdlib>
 #include<ctime>
+#include <vector>
+#include <algorithm>
+#include <random> // For std::mt19937
+
 using namespace std;
 
 class Produce
 {
 public:
 	int board[4][4];
-	Produce();//初始化遊戲面板
-	void generate_random_tile();//隨機產生方塊
-	void print_board();//印出初始畫面、更新後畫面
+	Produce();
+	void generate_random_tile();
+	void print_board();
 };
 #endif
