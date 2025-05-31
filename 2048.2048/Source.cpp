@@ -1,7 +1,10 @@
 #include"Game.h"
+#include <cstdlib>
+#include <ctime>
 
 int main() {
-	Produce p;
-	Game play(p);
-	play.play();
+	srand(static_cast<unsigned int>(time(0)));
+	Game game;
+	game.run();
+	return 0;
 }
