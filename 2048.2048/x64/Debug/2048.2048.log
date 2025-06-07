@@ -1,2 +1,4 @@
-﻿  Game.cpp
-  2048.2048.vcxproj -> C:\Users\Xianwen\Desktop\2048.2048\x64\Debug\2048.2048.exe
+﻿  Produce.cpp
+  LINK : 最後的累加連結找不到或未建置 C:\Users\xuash\source\repos\xianwenwu\2048\x64\Debug\2048.2048.exe，正在執行完整連結
+MSVCRTD.lib(exe_main.obj) : error LNK2019: 在函式 main"int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ) 中參考了無法解析的外部符號
+C:\Users\xuash\source\repos\xianwenwu\2048\x64\Debug\2048.2048.exe : fatal error LNK1120: 1 個無法解析的外部符號
