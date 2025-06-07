@@ -33,7 +33,7 @@ private:
     void mergeDown();
     void moveDown();
     bool checkWinCondition();
-    
+
     void play();
     void showOptionsScreen();
     void selectGameModeAndPlay();
