@@ -18,6 +18,7 @@ private:
     int score;
     int highScore;
     HANDLE hConsole;
+    bool soundEnabled;
 
     void shiftLeft();
     void mergeLeft();
@@ -32,11 +33,15 @@ private:
     void mergeDown();
     void moveDown();
     bool checkWinCondition();
+    
+    void play();
+    void showOptionsScreen();
+    void selectGameModeAndPlay();
 
 public:
     Produce A;
     Game(Produce);
-    void play();
+    void mainMenu();
     bool isGameOver();
 };
 #endif
