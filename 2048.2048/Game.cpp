@@ -5,11 +5,15 @@ Game::Game(Produce A) {
     this->A = A;
     this->winConditionMet = false;
     this->nickname = "";
+    this->score = 0;
+    this->highScore = 0;
+    this->hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 void Game::play() {
     char ch;
     for (;;) {
+        system("cls");
         cout << "--------------------------------------\n";
         cout << "|                                    |\n";
         cout << "|             2048 game              |\n";
@@ -19,6 +23,7 @@ void Game::play() {
         cout << "|   [Q]      Quit Game               |\n";
         cout << "|                                    |\n";
         cout << "--------------------------------------\n";
+        cout << "High Score: " << highScore << endl;
 
         ch = _getch();
         if (ch == ' ' || ch == 'i' || ch == 'I') {
@@ -40,13 +45,14 @@ void Game::play() {
 
     while (true) {
         system("cls");
+        cout << "Score: " << score << " | High Score: " << highScore << "\n";
         if (mode == CHALLENGE) {
             auto now = chrono::steady_clock::now();
             auto duration = chrono::duration_cast<chrono::seconds>(now - startTime);
             cout << "Player: " << nickname << "\n";
             cout << "Time: " << duration.count() << "s\n";
         }
-        A.print_board();
+        A.print_board(hConsole);
         cout << "Move: arrow keys, r = reset, q = quit\n";
 
         if (winConditionMet) {
@@ -57,6 +63,8 @@ void Game::play() {
             while (true) {
                 int endKey = _getch();
                 if (endKey == 'r' || endKey == 'R') {
+                    if(score > highScore) highScore = score;
+                    score = 0;
                     A = Produce();
                     winConditionMet = false;
                     if(mode == CHALLENGE) startTime = chrono::steady_clock::now();
@@ -69,11 +77,12 @@ void Game::play() {
         }
 
         if (isGameOver()) {
-            A.print_board();
             cout << "Game Over! r = reset, q = quit.\n";
             while (true) {
                 int endKey = _getch();
                 if (endKey == 'r' || endKey == 'R') {
+                    if(score > highScore) highScore = score;
+                    score = 0;
                     A = Produce();
                     winConditionMet = false;
                     if(mode == CHALLENGE) startTime = chrono::steady_clock::now();
@@ -82,7 +91,7 @@ void Game::play() {
                     exit(0);
                 }
             }
-            if(!isGameOver()) continue;
+             if(!isGameOver()) continue;
         }
 
         int key = _getch();
@@ -90,7 +99,8 @@ void Game::play() {
             cout << "Exiting the game.\n";
             break;
         } else if (key == 'r' || key == 'R') {
-            cout << "Resetting the game...\n";
+            if(score > highScore) highScore = score;
+            score = 0;
             A = Produce();
             winConditionMet = false;
             if (mode == CHALLENGE) {
@@ -143,6 +153,7 @@ void Game::mergeLeft() {
         for (int j = 0; j < 3; j++) {
             if (A.board[i][j] != 0 && A.board[i][j] == A.board[i][j + 1]) {
                 A.board[i][j] *= 2;
+                score += A.board[i][j];
                 A.board[i][j + 1] = 0;
             }
         }
@@ -174,6 +185,7 @@ void Game::mergeRight() {
         for (int j = 3; j > 0; j--) {
             if (A.board[i][j] != 0 && A.board[i][j] == A.board[i][j - 1]) {
                 A.board[i][j] *= 2;
+                score += A.board[i][j];
                 A.board[i][j - 1] = 0;
             }
         }
@@ -205,6 +217,7 @@ void Game::mergeUp() {
         for (int i = 0; i < 3; i++) {
             if (A.board[i][j] != 0 && A.board[i][j] == A.board[i + 1][j]) {
                 A.board[i][j] *= 2;
+                score += A.board[i][j];
                 A.board[i + 1][j] = 0;
             }
         }
@@ -236,6 +249,7 @@ void Game::mergeDown() {
         for (int i = 3; i > 0; i--) {
             if (A.board[i][j] != 0 && A.board[i][j] == A.board[i - 1][j]) {
                 A.board[i][j] *= 2;
+                score += A.board[i][j];
                 A.board[i - 1][j] = 0;
             }
         }
@@ -258,7 +272,7 @@ bool Game::isGameOver() {
             if (i < 3 && A.board[i][j] == A.board[i + 1][j]) {
                 return false;
             }
-            if (j < 3 && A.board[i][j] == A.board[i][j + 1]) {
+            if (j < 3 && A.board[i][j] == A.board[i][j - 1]) {
                 return false;
             }
         }
