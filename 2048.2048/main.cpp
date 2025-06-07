@@ -1,6 +1,8 @@
 #include "Game.h"
 
 int main() {
-    Game(Produce()).play();
+    Produce p;
+    Game game(p);
+    game.mainMenu();
     return 0;
 }
