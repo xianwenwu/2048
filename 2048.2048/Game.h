@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <string>
 #include <chrono>
+#include <windows.h>
 #include "Produce.h"
 using namespace std;
 
@@ -14,6 +15,9 @@ private:
     string nickname;
     chrono::steady_clock::time_point startTime;
     bool winConditionMet;
+    int score;
+    int highScore;
+    HANDLE hConsole;
 
     void shiftLeft();
     void mergeLeft();
