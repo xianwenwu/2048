@@ -126,7 +126,7 @@ void Game::play() {
 bool Game::checkWinCondition() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            if (A.board[i][j] == 2048) {
+            if (A.board[i][j] == 256) {
                 return true;
             }
         }
