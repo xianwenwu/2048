@@ -8,19 +8,77 @@ Game::Game(Produce A) {
     this->score = 0;
     this->highScore = 0;
     this->hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    this->soundEnabled = true;
 }
 
-void Game::play() {
-    char ch;
-    for (;;) {
+void Game::mainMenu() {
+    char choice;
+    while (true) {
         system("cls");
         cout << "--------------------------------------\n";
         cout << "|                                    |\n";
-        cout << "|             2048 game              |\n";
+        cout << "|             2048 Game              |\n";
+        cout << "|                                    |\n";
+        cout << "|      [S]  Start Game               |\n";
+        cout << "|      [O]  Options                  |\n";
+        cout << "|      [Q]  Quit Game                |\n";
+        cout << "|                                    |\n";
+        cout << "--------------------------------------\n";
+        cout << "High Score: " << highScore << endl;
+
+        choice = _getch();
+
+        switch (toupper(choice)) {
+            case 'S':
+                selectGameModeAndPlay();
+                break;
+            case 'O':
+                showOptionsScreen();
+                break;
+            case 'Q':
+                exit(0);
+                break;
+        }
+    }
+}
+
+void Game::showOptionsScreen() {
+    char input;
+    do {
+        system("cls");
+        cout << "--------------------------------------\n";
+        cout << "|                                    |\n";
+        cout << "|              Options               |\n";
+        cout << "|                                    |\n";
+        cout << "|  [1] Sound: " << (soundEnabled ? "On " : "Off") << "                  |\n";
+        cout << "|                                    |\n";
+        cout << "|  [B] Back to Main Menu             |\n";
+        cout << "|                                    |\n";
+        cout << "--------------------------------------\n";
+        input = _getch();
+        if (input == '1') {
+            soundEnabled = !soundEnabled;
+            if (soundEnabled) {
+                Beep(800, 150);
+            } else {
+                Beep(400, 150);
+            }
+        }
+    } while (input != 'b' && input != 'B');
+}
+
+
+void Game::selectGameModeAndPlay() {
+    char ch;
+    while(true) {
+        system("cls");
+        cout << "--------------------------------------\n";
+        cout << "|                                    |\n";
+        cout << "|          Select Game Mode          |\n";
         cout << "|                                    |\n";
         cout << "|   [SPACE]  Start Endless Mode      |\n";
         cout << "|   [I]      Start Challenge Mode    |\n";
-        cout << "|   [Q]      Quit Game               |\n";
+        cout << "|   [B]      Back to Main Menu       |\n";
         cout << "|                                    |\n";
         cout << "--------------------------------------\n";
         cout << "High Score: " << highScore << endl;
@@ -37,12 +95,19 @@ void Game::play() {
                 cin >> nickname;
                 startTime = chrono::steady_clock::now();
             }
+            play();
             break;
-        } else if (ch == 'q' || ch == 'Q') {
-            exit(0);
+        } else if (ch == 'b' || ch == 'B') {
+            return;
         }
     }
+}
 
+void Game::play() {
+    A = Produce();
+    score = 0;
+    winConditionMet = false;
+    
     while (true) {
         system("cls");
         cout << "Score: " << score << " | High Score: " << highScore << "\n";
@@ -53,13 +118,13 @@ void Game::play() {
             cout << "Time: " << duration.count() << "s\n";
         }
         A.print_board(hConsole);
-        cout << "Move: arrow keys, r = reset, q = quit\n";
+        cout << "Move: arrow keys, r = reset, q = quit to menu\n";
 
         if (winConditionMet) {
             auto endTime = chrono::steady_clock::now();
             auto finalDuration = chrono::duration_cast<chrono::seconds>(endTime - startTime);
             cout << "\nCongratulations, " << nickname << "! You reached 2048 in " << finalDuration.count() << " seconds!\n";
-            cout << "You Win! r = reset, q = quit.\n";
+            cout << "You Win! r = reset, q = quit to menu.\n";
             while (true) {
                 int endKey = _getch();
                 if (endKey == 'r' || endKey == 'R') {
@@ -70,14 +135,15 @@ void Game::play() {
                     if(mode == CHALLENGE) startTime = chrono::steady_clock::now();
                     break;
                 } else if (endKey == 'q' || endKey == 'Q') {
-                    exit(0);
+                    if(score > highScore) highScore = score;
+                    return;
                 }
             }
             if (!winConditionMet) continue;
         }
 
         if (isGameOver()) {
-            cout << "Game Over! r = reset, q = quit.\n";
+            cout << "Game Over! r = reset, q = quit to menu.\n";
             while (true) {
                 int endKey = _getch();
                 if (endKey == 'r' || endKey == 'R') {
@@ -88,7 +154,8 @@ void Game::play() {
                     if(mode == CHALLENGE) startTime = chrono::steady_clock::now();
                     break;
                 } else if (endKey == 'q' || endKey == 'Q') {
-                    exit(0);
+                    if(score > highScore) highScore = score;
+                    return;
                 }
             }
              if(!isGameOver()) continue;
@@ -96,8 +163,8 @@ void Game::play() {
 
         int key = _getch();
         if (key == 'q' || key == 'Q') {
-            cout << "Exiting the game.\n";
-            break;
+            if(score > highScore) highScore = score;
+            return;
         } else if (key == 'r' || key == 'R') {
             if(score > highScore) highScore = score;
             score = 0;
@@ -126,7 +193,7 @@ void Game::play() {
 bool Game::checkWinCondition() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            if (A.board[i][j] == 256) {
+            if (A.board[i][j] == 2048) {
                 return true;
             }
         }
@@ -155,6 +222,7 @@ void Game::mergeLeft() {
                 A.board[i][j] *= 2;
                 score += A.board[i][j];
                 A.board[i][j + 1] = 0;
+                if(soundEnabled) Beep(600, 100);
             }
         }
     }
@@ -187,6 +255,7 @@ void Game::mergeRight() {
                 A.board[i][j] *= 2;
                 score += A.board[i][j];
                 A.board[i][j - 1] = 0;
+                if(soundEnabled) Beep(600, 100);
             }
         }
     }
@@ -219,6 +288,7 @@ void Game::mergeUp() {
                 A.board[i][j] *= 2;
                 score += A.board[i][j];
                 A.board[i + 1][j] = 0;
+                if(soundEnabled) Beep(600, 100);
             }
         }
     }
@@ -251,6 +321,7 @@ void Game::mergeDown() {
                 A.board[i][j] *= 2;
                 score += A.board[i][j];
                 A.board[i - 1][j] = 0;
+                if(soundEnabled) Beep(600, 100);
             }
         }
     }
@@ -272,7 +343,7 @@ bool Game::isGameOver() {
             if (i < 3 && A.board[i][j] == A.board[i + 1][j]) {
                 return false;
             }
-            if (j < 3 && A.board[i][j] == A.board[i][j - 1]) {
+            if (j < 3 && A.board[i][j] == A.board[i][j + 1]) {
                 return false;
             }
         }
